@@ -1,0 +1,22 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+    - build
+    - --tag=gcr.io/${PROJECT_ID}/nodejs-helloworld:1.0.0
+    - .
+# Docker push to Google Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+    - push
+    - gcr.io/${PROJECT_ID}/nodejs-helloworld:1.0.0
+# Deploy to Cloud Run
+- name: google/cloud-sdk
+  args: 
+    - gcloud
+    - run
+    - deploy
+    - nodejs-helloworld
+    - --image=gcr.io/${PROJECT_ID}/nodejs-helloworld:1.0.0
+    - --region=us-central1
+    - --project=${_USER_PROJECT_}
+    - --allow-unauthenticated
